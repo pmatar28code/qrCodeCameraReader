@@ -1,29 +1,23 @@
 package com.example.qrcodecamerareader
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.net.Uri
+import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import java.util.concurrent.Executors
-import androidx.camera.core.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LifecycleOwner
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
-import java.nio.ByteBuffer
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ExecutorService
-typealias LumaListener = (luma: Double) -> Unit
+import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
     private var imageCapture: ImageCapture? = null
@@ -127,16 +121,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun startCamera() {
-        /*
-        val analyzer =MyImageAnalyzer(supportFragmentManager)
-        val imageAnalysis = ImageAnalysis.Builder()
-            .setTargetResolution(Size(1280, 720))
-            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-            .build()
-        imageAnalysis.setAnalyzer(cameraExecutor, analyzer)*/
-
-
-
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener(Runnable {
@@ -149,14 +133,6 @@ class MainActivity : AppCompatActivity() {
                 .also {
                     it.setSurfaceProvider(viewFinder.surfaceProvider)
                 }
-            /*
-            val imageAnalyzer = ImageAnalysis.Builder()
-                .build()
-                .also {
-                    it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
-                        Log.d(TAG, "Average luminosity: $luma")
-                    })
-                }*/
             val analyzer =MyImageAnalyzer(supportFragmentManager)
             val imageAnalysis = ImageAnalysis.Builder()
                 //.setTargetResolution(Size(1280, 720))
@@ -180,26 +156,5 @@ class MainActivity : AppCompatActivity() {
             }
 
         }, ContextCompat.getMainExecutor(this))
-    }
-    private class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
-
-        private fun ByteBuffer.toByteArray(): ByteArray {
-            rewind()    // Rewind the buffer to zero
-            val data = ByteArray(remaining())
-            get(data)   // Copy the buffer into a byte array
-            return data // Return the byte array
-        }
-
-        override fun analyze(image: ImageProxy) {
-
-            val buffer = image.planes[0].buffer
-            val data = buffer.toByteArray()
-            val pixels = data.map { it.toInt() and 0xFF }
-            val luma = pixels.average()
-
-            listener(luma)
-
-            image.close()
-        }
     }
 }

@@ -46,7 +46,6 @@ class BarcodeResultBottomSheet: BottomSheetDialogFragment() {
         val executor = Executors.newSingleThreadExecutor()
         val handler = Handler(Looper.getMainLooper())
         executor.execute {
-
             //val doc = Jsoup.connect(url).get()
             //val desc = doc.select("meta[name=description]")[0].attr("content")
             handler.post {

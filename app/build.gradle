@@ -47,7 +47,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation 'com.google.mlkit:barcode-scanning:17.0.0'
-    implementation 'org.jsoup:jsoup:1.13.1'
+    //implementation 'org.jsoup:jsoup:1.13.1'
 
     def camerax_version = "1.0.1"
 // CameraX core library using camera2 implementation
