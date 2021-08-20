@@ -40,10 +40,10 @@ class MyImageAnalyzer(
     private fun readBarcodeData(barcodes: List<Barcode>) {
         for (barcode in barcodes) {
             when (barcode.valueType) {
-                Barcode. TYPE_URL -> {
+                Barcode.TYPE_TEXT -> {
                     if (!bottomSheet.isAdded)
                         bottomSheet.show(fragmentManager, "")
-                    bottomSheet.updateURL(barcode.url?.url.toString())
+                    bottomSheet.updateURL(barcode.rawValue)
                 }
             }
         }

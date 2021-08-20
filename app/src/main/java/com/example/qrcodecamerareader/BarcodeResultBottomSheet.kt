@@ -22,10 +22,10 @@ class BarcodeResultBottomSheet: BottomSheetDialogFragment() {
 
     //We will call this function to update the URL displayed
     fun updateURL(url: String) {
-        fetchUrlMetaData(url) { title, desc ->
+        fetchUrlMetaData(url) { title ->
             view?.apply {
                 findViewById<TextView>(R.id.text_view_title)?.text = title
-                findViewById<TextView>(R.id.text_view_desc)?.text = desc
+                //findViewById<TextView>(R.id.text_view_desc)?.text = desc
                 findViewById<TextView>(R.id.text_view_link)?.text = url
                 findViewById<TextView>(R.id.text_view_visit_link).setOnClickListener { _ ->
                     Intent(Intent.ACTION_VIEW).also {
@@ -40,15 +40,16 @@ class BarcodeResultBottomSheet: BottomSheetDialogFragment() {
     //this function will fetch URL data
     private fun fetchUrlMetaData(
         url: String,
-        callback: (title: String, desc: String) -> Unit
+        callback: (title: String) -> Unit
     ) {
         val executor = Executors.newSingleThreadExecutor()
         val handler = Handler(Looper.getMainLooper())
         executor.execute {
-            val doc = Jsoup.connect(url).get()
-            val desc = doc.select("meta[name=description]")[0].attr("content")
+
+            //val doc = Jsoup.connect(url).get()
+            //val desc = doc.select("meta[name=description]")[0].attr("content")
             handler.post {
-                callback(doc.title(), desc)
+                callback(url)
             }
         }
     }
